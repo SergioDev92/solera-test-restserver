@@ -4,7 +4,7 @@ const { response } = require('express');
 const Incident = require('../models/Incident.model');
 
 
-const createIncident = async(req, res = response) => {
+const createIncident = async (req, res = response) => {
 
     // const { name, email, password } = req.body;
     // console.log(name, email, password)
@@ -14,6 +14,8 @@ const createIncident = async(req, res = response) => {
         //Crear incidente con el modelo
         const dbIncident = new Incident(req.body);
 
+        console.log(dbIncident);
+
         //guardar usuario en la base de datos
         await dbIncident.save();
 
@@ -21,7 +23,7 @@ const createIncident = async(req, res = response) => {
         return res.status(200).json({
             ok: true,
             uid: dbIncident.id,
-            tiipo_de_evento: dbIncident.tipo_de_evento,
+            tipo_de_evento: dbIncident.tipo_de_evento,
         })
 
 
@@ -37,32 +39,30 @@ const createIncident = async(req, res = response) => {
 
 const locateIncident = async (req, res = response) => {
 
-    // const { email, password } = req.body;
-    // console.log( email, password)
+    const { id } = req.params
 
-    //Verificar si existe el incidente
-    // let incident = await Incident.findById( id );
-    let incident = await Incident.findOne({ id });
+    //encontrar incidente en la base de datos
+    let incident = await Incident.findById(id);
 
-    if (incident) {
-        return res.status(400).json({
-            ok: false,
-            msg: 'El incidente no existe con ese id'
-        });
+    return res.status(200).json({
+        incident
+    });
 
-        return res.json({
-            ok: true,
-            msg: 'locate incident'
-        });
-    }
 }
-const updateIncident = (req, res = response) => {
+const updateIncident = async (req, res = response) => {
 
-    //Verificar si existe el incidente
+    // console.log("prueba");
+    const { id } = req.params
+
+    //extraer el id del incidente y separarlo de los demas campos
+    const { _id, ...params } = req.body;
+
+    //actualizar incidente en la base de datos
+    const incident = await Incident.findByIdAndUpdate(id, params, { new: true })
 
     return res.json({
-        ok: true,
-        msg: 'update incident'
+        msg: "put API - actualizar incidente",
+        incident
     });
 }
 

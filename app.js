@@ -1,6 +1,5 @@
 
 require('dotenv').config();
-const { dbConnection } = require('./db/config');
 const Server = require('./models/server');
 
 const server = new Server();
@@ -10,7 +9,5 @@ server.listen();
 
 
 
-//base de datos
-dbConnection();
 
 

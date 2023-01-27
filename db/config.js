@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const dbConnection = async () => {
     try {
         //configuracion inicial que me da mongo atlas recomienda
-        await mongoose.connect(process.env.BD_CNN );
+        await mongoose.connect(process.env.DB_CNN );
         console.log("Database connected");
     } catch (error) {
         console.log(error);

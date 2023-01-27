@@ -2,6 +2,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { createIncident, locateIncident, updateIncident, deleteIncident } = require('../controllers/incident.controller');
+const { existeIncidente } = require('../helpers/db-validators');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 // const { crearUsuario, loginUsuario, renewToken } = require('./controllers/auth.controller');
@@ -19,13 +20,21 @@ const { validarCampos } = require('../middlewares/validar-campos');
  ], createIncident);
 
  //renew token
-  router.get( '/locate', locateIncident); 
+  router.get( '/get/:id', [
+      check("id", "No es un id de mongo").isMongoId(),
+      check("id").custom(existeIncidente),
+      validarCampos
+  ],
+  locateIncident); 
 
-  router.put( '/update', updateIncident); 
+  router.put( '/update/:id', [
+      check("id", "No es un id de mongo").isMongoId(),
+      check("id").custom(existeIncidente),
+      validarCampos
+  ],updateIncident); 
 
   router.delete( '/delete', deleteIncident); 
-//  //login
-//  router.post( '/', loginUsuario);
+
     
 
  module.exports = router;
